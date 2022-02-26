@@ -30,26 +30,26 @@ type Templates = {
 
 const templates: Templates = {
 	verification: (payload: EmailPayload) => ({
-		subject: "Verify your email",
+		subject: "Pomozme Ukrajině - ověření emailu",
 		text: `
-			Hello,
+			Dobrý den,
 
-			Please verify your email by clicking the link below:
+			děkujeme za nabídku pomoci. Prosíme vás o potvrzení vašeho emailu kliknutím na odkaz níže a následně nastavení hesla.
 
 			${payload.verificationUrl}
 
-			Thanks,
-			The Team
+			Děkujeme!
+			Tým Pomozme Ukrajině
 		`,
 		html: `
-			<p>Hello,</p>
+			<p>Dobrý den,</p>
 
-			<p>Please verify your email by clicking the link below:</p>
+			<p>děkujeme za nabídku pomoci. Prosíme vás o potvrzení vašeho emailu kliknutím na odkaz níže a následně nastavení hesla.</p>
 
 			<p><a href="${payload.verificationUrl}">${payload.verificationUrl}</a></p>
 
-			<p>Thanks,</p>
-			<p>The Team</p>
+			<p>Děkujeme!</p>
+			<p>Tým Pomozme Ukrajině</p>
 		`
 	})
 }
