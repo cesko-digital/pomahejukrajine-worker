@@ -33,13 +33,13 @@ jobs:
           tags: |
             831119889470.dkr.ecr.eu-central-1.amazonaws.com/mangoweb/app/ukrajina/worker:gh-${{ github.sha }}
 
-  deplo:
+  deploy:
     if: ${{ contains('refs/heads/deploy/beta',github.ref) || contains('refs/heads/deploy/prod',github.ref) }}
     permissions:
       id-token: write
       contents: read
     needs:
-      - build-docker
+      - build
     runs-on: ubuntu-latest
     steps:
       - name: Login to GitHub Container Registry
