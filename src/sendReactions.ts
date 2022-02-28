@@ -3,10 +3,20 @@ import {CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN, FRONTEND_URL} from "./config.js"
 import {sendEmail} from "./email.js";
 import {generateSecretCode} from "./utils";
 
-const verifyUser = async (id: string, email: string) => {
-	const secretCode = generateSecretCode();
-	await sendEmail(email, "verification", {
-		verificationUrl: `${FRONTEND_URL}/verify?id=${id}&secretCode=${secretCode}`,
+type Reaction = {
+	id: string
+	email: string
+	phone: string
+	offer: { type: { name: string } }
+	volunteer: { email: string }
+}
+
+const verifyReaction = async (reaction: Reaction) => {
+	// const secretCode = generateSecretCode();
+	await sendEmail(reaction.volunteer.email, "reaction", {
+		email: reaction.email,
+		phone: reaction.phone,
+		offerTypeName: reaction.offer.type.name,
 	});
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
@@ -19,7 +29,7 @@ const verifyUser = async (id: string, email: string) => {
 			body: JSON.stringify({
 				query: `
 					mutation ($id: UUID!, $secretCode: String!) {
-						updateVolunteer(
+						updateReaction(
 							by: { id: $id }
 							data: { secretCode: $secretCode }
 						) {
@@ -41,7 +51,7 @@ const verifyUser = async (id: string, email: string) => {
 	}
 }
 
-export const sendVerifications = async () => {
+export const sendReactions = async () => {
 	const listResponse = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
@@ -53,18 +63,18 @@ export const sendVerifications = async () => {
 			body: JSON.stringify({
 				query: `
 					{
-						listVolunteer(
+						listReaction(
 							filter: {
 								and: [
-									{ banned: { eq: false } }
-									{ verified: { eq: false } }
-									{ secretCode: { isNull: true } }
-									{ identityId: { isNull: true } }
+									{ verified: { eq: true } }
 								]
 							}
 						) {
 							id
 							email
+							phone
+							offer { type { name } }
+							volunteer { email }
 						}
 					}
 				`
@@ -72,14 +82,14 @@ export const sendVerifications = async () => {
 		}
 	)
 	const listJson = listResponse.ok ? await listResponse.json() : undefined
-	const list: undefined | { id: string; email: string; }[] = listJson ? (listJson as any)?.data?.listVolunteer : undefined
+	const list: undefined | { id: string; email: string; }[] = listJson ? (listJson as any)?.data?.listReaction : undefined
 
 	for (const { id, email } of list) {
 		try {
-			console.log(`Sending verification email to ${email}`)
-			await verifyUser(id, email)
+			console.log(`Sending reaction verification email to ${email}`)
+			await verifyReaction(id, email)
 		} catch (e) {
-			console.error(`Failed sending verification email to ${email}: ${e.message}`)
+			console.error(`Failed sending reaction verification email to ${email}: ${e.message}`)
 		}
 	}
 }
