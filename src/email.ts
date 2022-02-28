@@ -12,7 +12,6 @@ type Payloads = {
 		offerTypeName: string
 		email: string
 		phone: string
-		password: string
 	}
 }
 

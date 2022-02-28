@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import {CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN, FRONTEND_URL} from "./config.js";
 import {sendEmail} from "./email.js";
-import {generateSecretCode} from "./utils";
+import {generateSecretCode} from "./utils.js";
 
 const verifyReaction = async (id: string, email: string) => {
 	const secretCode = generateSecretCode();
