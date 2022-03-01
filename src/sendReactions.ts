@@ -66,6 +66,7 @@ export const sendReactions = async () => {
 							filter: {
 								and: [
 									{ verified: { eq: true } }
+									{ volunteerNotified: { eq: false } }
 								]
 							}
 						) {
