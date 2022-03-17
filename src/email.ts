@@ -268,6 +268,8 @@ const templates: Templates = {
 
 			${!payload.phone ? '' : `Telefon: ${payload.phone}`}
 
+			Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.
+
 			Děkujeme!
 			Tým Pomáhej Ukrajině
 		`,
@@ -337,6 +339,8 @@ const templates: Templates = {
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">E-mail: ${payload.email}</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Telefon: ${!payload.phone ? 'Nevyplněn' : `${payload.phone}`}</p>
+
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
 											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
