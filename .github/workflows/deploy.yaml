@@ -3,8 +3,7 @@ name: 'Test and Deploy'
 on:
   push:
     branches:
-      - main
-      - 'deploy/*'
+      - 'deploy/prod'
   pull_request:
 
 jobs:
