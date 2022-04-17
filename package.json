@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "staging-scripts": "node ./dist/stagingScripts.js"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",

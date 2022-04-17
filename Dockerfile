@@ -1,4 +1,4 @@
-FROM node:17.6
+FROM node:16.14.2
 WORKDIR /src
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json
