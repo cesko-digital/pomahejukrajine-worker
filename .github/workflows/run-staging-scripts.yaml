@@ -1,0 +1,51 @@
+name: 'Run Staging scripts'
+
+on:
+  schedule:
+    # * is a special character in YAML, so you have to quote this string
+    - cron: '*/15 * * * *'
+
+jobs:
+  build:
+
+    name: Build and run staging scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js LTS 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Set environment variables
+        run: |
+          echo "CONTEMBER_CONTENT_URL=${{ secrets.STAGING_CONTEMBER_CONTENT_URL }}" >> $GITHUB_ENV
+          echo "CONTEMBER_TENANT_URL=${{ secrets.STAGING_CONTEMBER_TENANT_URL }}" >> $GITHUB_ENV
+          echo "CONTEMBER_TOKEN=${{ secrets.STAGING_CONTEMBER_TOKEN }}" >> $GITHUB_ENV
+          echo "EMAIL_HOST=${{ secrets.STAGING_EMAIL_HOST }}" >> $GITHUB_ENV
+          echo "EMAIL_PORT=${{ secrets.STAGING_EMAIL_PORT }}" >> $GITHUB_ENV
+          echo "EMAIL_USER=${{ secrets.STAGING_EMAIL_USER }}" >> $GITHUB_ENV
+          echo "EMAIL_PASSWORD=${{ secrets.STAGING_EMAIL_PASSWORD }}" >> $GITHUB_ENV
+          echo "EMAIL_FROM=${{ secrets.STAGING_EMAIL_FROM }}" >> $GITHUB_ENV
+          echo "FRONTEND_URL=${{ secrets.STAGING_FRONTEND_URL }}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Build
+        run: |
+          npm run build
+
+#      - name: Test application
+#        run: |
+#          npm test
+
+      - name: Run scripts
+        run: |
+          npm run staging-scripts
