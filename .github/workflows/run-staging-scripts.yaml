@@ -2,9 +2,9 @@ name: 'Run Staging scripts'
 
 on:
   workflow_dispatch:
-#  schedule:
+  schedule:
 #    # * is a special character in YAML, so you have to quote this string
-#    - cron: '*/15 * * * *'
+    - cron: '00 * * * *'
 
 jobs:
   build:
