@@ -9,7 +9,7 @@ import {
 	TYPESENSE_PROTOCOL
 } from "./config.js";
 
-const client = new Typesense.Client({
+const client = TYPESENSE_HOST && new Typesense.Client({
 	'nodes': [{
 		'host': TYPESENSE_HOST,
 		'port': TYPESENSE_PORT,
