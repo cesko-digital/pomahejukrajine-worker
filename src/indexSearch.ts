@@ -19,6 +19,18 @@ const client = TYPESENSE_HOST && new Typesense.Client({
 	'connectionTimeoutSeconds': 2
 })
 
+async function retry(count: number, fn: () => Promise<any>): Promise<any> {
+	try {
+		return await fn()
+	} catch (e) {
+		console.log(`Retry ${count}`)
+		if (count > 0) {
+			return retry(count - 1, fn)
+		} else {
+			throw e
+		}
+	}
+}
 
 export async function indexToTypesense() {
 	const collections = await client.collections().retrieve()
@@ -67,7 +79,13 @@ export async function indexToTypesense() {
 				],
 			})
 		}
-		await indexOfferType(offerTypeId)
+		try {
+			await retry(5, async () => {
+				await indexOfferType(offerTypeId)
+			})
+		} catch (e) {
+			console.error(`Error while indexing offer type ${offerTypeId}`, e)
+		}
 	}
 }
 
