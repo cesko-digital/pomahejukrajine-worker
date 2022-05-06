@@ -103,9 +103,7 @@ async function indexOfferType(offerTypeId: string) {
 			body: JSON.stringify({
 				query: `
 					query($offerTypeId: UUID!) {
-						listOffer(filter: {type: {id: {eq: $offerTypeId}}}
-							limit: 6000
-							) {
+						listOffer(filter: {type: {id: {eq: $offerTypeId}}}) {
 							id
 							volunteer {
 								name
