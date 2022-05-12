@@ -4,6 +4,7 @@ import {sendReactions} from "./sendReactions.js";
 import {indexToTypesense} from "./indexSearch.js";
 import {indexToTypesensePublic} from "./indexSearchPublic.js";
 import {TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC} from "./config.js";
+import { translateStuff } from "./translateStuff.js";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -30,6 +31,9 @@ async function main() {
 			console.log("Indexing to typesense public")
 			await indexToTypesensePublic()
 		}
+
+		console.log("Translating");
+		await translateStuff()
 
 		i++;
 
