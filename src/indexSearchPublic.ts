@@ -151,10 +151,6 @@ async function indexOfferType(offerTypeId: string) {
 function offerToDocument(offer: any) {
 	return {
 		id: offer.id,
-		volunteer_name: offer.volunteer.name,
-		volunteer_email: offer.volunteer.email,
-		volunteer_phone: offer.volunteer.phone,
-		logs: offer.logs.map((it: any) => it.text),
 		...Object.fromEntries(
 			offer.parameters
 				.map((parameter: any) => [`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)])
