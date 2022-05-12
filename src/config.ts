@@ -11,3 +11,7 @@ export const TYPESENSE_HOST = process.env.TYPESENSE_HOST
 export const TYPESENSE_PORT = parseInt(process.env.TYPESENSE_PORT, 10)
 export const TYPESENSE_PROTOCOL = process.env.TYPESENSE_PROTOCOL
 export const TYPESENSE_API_KEY = process.env.TYPESENSE_API_KEY
+export const TYPESENSE_HOST_PUBLIC = process.env.TYPESENSE_HOST_PUBLIC
+export const TYPESENSE_PORT_PUBLIC = parseInt(process.env.TYPESENSE_PORT_PUBLIC, 10)
+export const TYPESENSE_PROTOCOL_PUBLIC = process.env.TYPESENSE_PROTOCOL_PUBLIC
+export const TYPESENSE_API_KEY_PUBLIC = process.env.TYPESENSE_API_KEY_PUBLIC
