@@ -3,7 +3,7 @@ import {sendReactionVerifications} from "./sendReactionVerifications.js";
 import {sendReactions} from "./sendReactions.js";
 import {indexToTypesense} from "./indexSearch.js";
 import {indexToTypesensePublic} from "./indexSearchPublic.js";
-import {TYPESENSE_HOST} from "./config.js";
+import {TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC} from "./config.js";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
