@@ -107,12 +107,6 @@ async function indexOfferType(offerTypeId: string) {
 							type: { id: { eq: $offerTypeId } }
 						}) {
 							id
-							volunteer {
-								name
-								email
-								phone
-							}
-							logs { text }
 							parameters(filter: {
 								question: { public: { eq:  true } }
 							}){
@@ -121,11 +115,9 @@ async function indexOfferType(offerTypeId: string) {
 									type
 								}
 								value
-								numericValue
 								specification
 								values {
 									value
-									numericValue
 									specification
 									district { name }
 								}
