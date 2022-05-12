@@ -17,13 +17,13 @@ export async function translateStuff() {
 							query {
 								listOfferParameterValue(
 									filter: {
-										value: { isNull: false }
-										and: { valueUK: { isNull: true } }
+										specification: { isNull: false }
+										and: { specificationUK: { isNull: true } }
 									},
 									limit: 1
 								) {
 									id
-									value
+									specification
 								}
 							}
 						`,
@@ -36,7 +36,7 @@ export async function translateStuff() {
     }
     for (const thingToTranslate of thingsToTranslate) {
         const thingToTranslateId = thingToTranslate.id;
-        const thingToTranslateValue = thingToTranslate.value;
+        const thingToTranslateValue = thingToTranslate.specification;
         try {
 						const data = "input_text=" + thingToTranslateValue;
 
@@ -78,7 +78,7 @@ const saveTranslation = async (translation: String, translationID: String) => {
 						updateOfferParameterValue(
 							by: { id: $id }
 							data: {
-								valueUK: $data
+								specificationUK: $data
 							}
 						) {
 							ok
