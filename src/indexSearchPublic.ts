@@ -1,5 +1,5 @@
 import Typesense from 'typesense'
-import fetch from "node-fetch";
+import fetch from "node-fetch"
 import {
 	CONTEMBER_CONTENT_URL,
 	CONTEMBER_TOKEN,
@@ -7,7 +7,7 @@ import {
 	TYPESENSE_HOST_PUBLIC,
 	TYPESENSE_PORT_PUBLIC,
 	TYPESENSE_PROTOCOL_PUBLIC
-} from "./config.js";
+} from "./config.js"
 
 const client = TYPESENSE_HOST_PUBLIC && new Typesense.Client({
 	'nodes': [{
@@ -103,13 +103,10 @@ async function indexOfferType(offerTypeId: string) {
 			body: JSON.stringify({
 				query: `
 					query($offerTypeId: UUID!) {
-						listOffer(filter: {
-							type: { id: { eq: $offerTypeId } }
-						}) {
+						listOffer(filter: { type: { id: { eq: $offerTypeId } } }) {
 							id
-							parameters(filter: {
-								question: { public: { eq:  true } }
-							}){
+							code
+							parameters(filter: { question: { public: { eq:  true } } }){
 								question {
 									id
 									type
@@ -119,7 +116,9 @@ async function indexOfferType(offerTypeId: string) {
 								values {
 									value
 									specification
-									district { name }
+									district {
+										name
+									}
 								}
 							}
 						}
@@ -132,7 +131,7 @@ async function indexOfferType(offerTypeId: string) {
 		}
 	)
 
-	const listOfferResponse = await response.json() as any;
+	const listOfferResponse = await response.json() as any
 	const offers = listOfferResponse?.data?.listOffer
 
 	if (!offers || !Array.isArray(offers)) {
@@ -151,6 +150,7 @@ async function indexOfferType(offerTypeId: string) {
 function offerToDocument(offer: any) {
 	return {
 		id: offer.id,
+		code: offer.code,
 		...Object.fromEntries(
 			offer.parameters
 				.map((parameter: any) => [`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)])
