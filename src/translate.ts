@@ -55,7 +55,10 @@ export async function translate() {
 				body: params
 			})
 
-			if (!result.ok) console.error('Failed to translate: ', id, result)
+			if (!result.ok) {
+				console.error('Failed to translate: ', id, result)
+				return
+			}
 
 			const json = await result.json()
 			translations.push({ text: json[0], id })
