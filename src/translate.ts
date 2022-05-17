@@ -1,5 +1,5 @@
-import fetch from "node-fetch"
-import { XMLHttpRequest } from "xmlhttprequest"
+import fetch, { } from "node-fetch"
+
 import {
 	CONTEMBER_CONTENT_URL,
 	CONTEMBER_TOKEN,
@@ -17,7 +17,7 @@ export async function translate() {
 				query {
 					listOfferParameterValue(
 						filter: { specification: { isNull: false } and: { specificationUK: { isNull: true } } },
-						limit: 10
+						limit: 1
 					) {
 						id
 						specification
@@ -33,26 +33,23 @@ export async function translate() {
 
 	console.log('Sending translation requests...')
 	for (const { id, specification } of thingsToTranslate) {
-		if (!/\s/.test(specification)) {
-			const result = await fetch('https://lindat.cz/translation/api/v2/languages/?src=cs&tgt=uk&logInput=true&author=PomahejUkrajine', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Accept': 'application/json'
-				},
-				body: "input_text=" + specification,
-			})
+		const params = new URLSearchParams()
+		params.append('input_text', specification)
 
-			if (!result.ok) console.error('Failed to translate: ', id, result)
+		const result = await fetch('https://lindat.cz/translation/api/v2/languages/?src=cs&tgt=uk&logInput=true&author=PomahejUkrajine', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Accept': 'application/json'
+			},
+			body: params
+		})
 
-			const json = await result.json()
-			console.log('json', json)
+		if (!result.ok) console.error('Failed to translate: ', id, result)
 
-			saveTranslation(json[0], id)
-		} else {
-			saveTranslation(specification, id)
-		}
+		const json = await result.json()
 
+		saveTranslation(json[0], id)
 	}
 }
 
