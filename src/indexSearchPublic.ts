@@ -103,7 +103,16 @@ async function indexOfferType(offerTypeId: string) {
 			body: JSON.stringify({
 				query: `
 					query($offerTypeId: UUID!) {
-						listOffer(filter: { type: { id: { eq: $offerTypeId } } }) {
+						listOffer(filter: {
+							type: { id: { eq: $offerTypeId } }
+							exhausted: { eq: false }
+							status: { type: { isNull: true } }
+							isDeleted: { eq: false }
+							volunteer: {
+								verified: { eq: true }
+								banned: { eq: false }
+							}
+						}) {
 							id
 							code
 							parameters(filter: { question: { public: { eq:  true } } }){
