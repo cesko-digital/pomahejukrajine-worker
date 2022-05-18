@@ -1,5 +1,5 @@
 import fetch, { } from "node-fetch"
-
+import { generateMutation } from './utils.js'
 import {
 	CONTEMBER_CONTENT_URL,
 	CONTEMBER_TOKEN,
@@ -16,8 +16,13 @@ export async function translate() {
 			query: `
 				query {
 					listOfferParameterValue(
-						filter: { specification: { isNull: false } and: { specificationUK: { isNull: true } } },
-						limit: 1
+						filter: {
+							and: {
+								specification: { isNull: false }
+								specificationUK: { isNull: true }
+							}
+						}
+						limit: 10
 					) {
 						id
 						specification
@@ -31,29 +36,40 @@ export async function translate() {
 
 	if (!thingsToTranslate.length) return
 
-	console.log('Sending translation requests...')
+	const translations = []
 	for (const { id, specification } of thingsToTranslate) {
-		const params = new URLSearchParams()
-		params.append('input_text', specification)
+		if (!specification.trim().length) {
+			console.log('Skipping empty translation request.', specification)
+			translations.push({ text: specification, id })
+		} else {
+			const params = new URLSearchParams()
+			params.append('input_text', specification)
 
-		const result = await fetch('https://lindat.cz/translation/api/v2/languages/?src=cs&tgt=uk&logInput=true&author=PomahejUkrajine', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Accept': 'application/json'
-			},
-			body: params
-		})
+			console.log('Sending translation request for ', id)
+			const result = await fetch('https://lindat.cz/translation/api/v2/languages/?src=cs&tgt=uk&logInput=true&author=PomahejUkrajine', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Accept': 'application/json'
+				},
+				body: params
+			})
 
-		if (!result.ok) console.error('Failed to translate: ', id, result)
+			if (!result.ok) {
+				console.error('Failed to translate: ', id, result)
+				return
+			}
 
-		const json = await result.json()
-
-		saveTranslation(json[0], id)
+			const json = await result.json()
+			translations.push({ text: json[0], id })
+		}
 	}
+
+	saveTranslations(translations)
 }
 
-const saveTranslation = async (translation: String, translationID: String) => {
+const saveTranslations = async (translations: { text: string, id: string }[]) => {
+	const mutation = generateMutation(translations)
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
@@ -63,32 +79,18 @@ const saveTranslation = async (translation: String, translationID: String) => {
 				'Authorization': `Bearer ${CONTEMBER_TOKEN}`,
 			},
 			body: JSON.stringify({
-				query: `
-					mutation($data: String, $id: UUID!) {
-						updateOfferParameterValue(
-							by: { id: $id }
-							data: {
-								specificationUK: $data
-							}
-						) {
-							ok
-							errorMessage
-						}
-					}
-				`,
-				variables: {
-					data: translation,
-					id: translationID,
-				},
+				query: mutation,
 			}),
 		}
 	)
 
 	if (response.ok) {
-		console.log('Saved translation.')
+		console.log('Translations saved.')
 	} else {
-		console.error('Failed to save translation: ', response)
+		console.error('Translations failed to save: ', response)
 	}
 
 	return
 }
+
+
