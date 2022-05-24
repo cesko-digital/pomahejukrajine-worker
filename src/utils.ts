@@ -54,3 +54,20 @@ export function generateMutationParameter(translations: { text: string, id: stri
 	mutation += `}`
 	return mutation
 }
+
+export function generateMutationParameterSpec(translations: { text: string, id: string }[]): string {
+	let mutation = `mutation {`
+	for (let index = 0; index < translations.length; index++) {
+		mutation += `
+			update_${index}: updateOfferParameter(by: {
+				id: "${translations[index].id}" },
+				data: { specificationUK: ${JSON.stringify(translations[index].text)} })
+				{
+					ok
+					errorMessage
+				}
+		`
+	}
+	mutation += `}`
+	return mutation
+}

@@ -7,6 +7,7 @@ import { TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC } from "./config.js"
 import { translate } from "./translate.js"
 import { translateValues } from "./translateValues.js"
 import { translateParameter } from "./translateParameter.js"
+import { translateParameterSpec } from "./translateParameterSpec.js"
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -39,13 +40,20 @@ async function main() {
 			await translate()
 		}
 
-		if (i % 220 === 0 && TYPESENSE_HOST_PUBLIC) { // 16 minutes
+		if (i % 220 === 0 && TYPESENSE_HOST_PUBLIC) { // some minutes
 			console.log("Translating values...")
 			await translateValues()
 		}
 
-		console.log("Translating values...")
-		await translateParameter()
+		if (i % 2 === 0 && TYPESENSE_HOST_PUBLIC) { // Every 10 seconds
+			console.log("Translating parameter values...")
+			await translateParameter()
+		}
+
+		if (i % 3 === 0 && TYPESENSE_HOST_PUBLIC) { // Every 15 seconds
+			console.log("Translating parameter specifications...")
+			await translateParameterSpec()
+		}
 
 
 		i++
