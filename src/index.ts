@@ -6,6 +6,7 @@ import { indexToTypesensePublic } from "./indexSearchPublic.js"
 import { TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC } from "./config.js"
 import { translate } from "./translate.js"
 import { translateValues } from "./translateValues.js"
+import { translateParameter } from "./translateParameter.js"
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -38,8 +39,14 @@ async function main() {
 			await translate()
 		}
 
+		if (i % 220 === 0 && TYPESENSE_HOST_PUBLIC) { // 16 minutes
+			console.log("Translating values...")
+			await translateValues()
+		}
+
 		console.log("Translating values...")
-		await translateValues()
+		await translateParameter()
+
 
 		i++
 
