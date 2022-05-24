@@ -25,7 +25,7 @@ export async function translateParameterSpec() {
 						limit: 10
 					) {
 						id
-						value
+						specification
 					}
 				}
 			`,
@@ -37,13 +37,13 @@ export async function translateParameterSpec() {
 	if (!thingsToTranslate.length) return
 
 	const translations = []
-	for (const { id, value } of thingsToTranslate) {
-		if (!value.trim().length) {
-			console.log('Skipping empty translation request.', value)
-			translations.push({ text: value, id })
+	for (const { id, specification } of thingsToTranslate) {
+		if (!specification.trim().length) {
+			console.log('Skipping empty translation request.', specification)
+			translations.push({ text: specification, id })
 		} else {
 			const params = new URLSearchParams()
-			params.append('input_text', value)
+			params.append('input_text', specification)
 
 			console.log('Sending translation request for ', id)
 			const result = await fetch('https://lindat.cz/translation/api/v2/languages/?src=cs&tgt=uk&logInput=true&author=PomahejUkrajine', {

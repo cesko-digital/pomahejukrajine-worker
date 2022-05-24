@@ -35,22 +35,22 @@ async function main() {
 			await indexToTypesensePublic()
 		}
 
-		if (i % 200 === 0 && TYPESENSE_HOST_PUBLIC) { // 16 minutes
+		if (i % 200 === 0) { // 16 minutes
 			console.log("Translating...")
 			await translate()
 		}
 
-		if (i % 220 === 0 && TYPESENSE_HOST_PUBLIC) { // some minutes
+		if (i % 220 === 0) { // some minutes
 			console.log("Translating values...")
 			await translateValues()
 		}
 
-		if (i % 2 === 0 && TYPESENSE_HOST_PUBLIC) { // Every 10 seconds
+		if (i % 2 === 0) { // Every 10 seconds
 			console.log("Translating parameter values...")
 			await translateParameter()
 		}
 
-		if (i % 3 === 0 && TYPESENSE_HOST_PUBLIC) { // Every 15 seconds
+		if (i % 3 === 0) { // Every 15 seconds
 			console.log("Translating parameter specifications...")
 			await translateParameterSpec()
 		}
