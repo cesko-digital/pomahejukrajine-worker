@@ -121,12 +121,17 @@ async function indexOfferType(offerTypeId: string) {
 									type
 								}
 								value
+								valueUK
 								specification
+								specificationUK
 								values {
 									value
+									valueUK
 									specification
+									specificationUK
 									district {
 										name
+										nameUK
 									}
 								}
 							}
@@ -162,12 +167,18 @@ function offerToDocument(offer: any) {
 		code: offer.code,
 		...Object.fromEntries(
 			offer.parameters
-				.map((parameter: any) => [`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)])
+				.flatMap((parameter: any) => [
+					[`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)],
+					[`parameter_uk_${parameter.question.id}`, parameterToUkDocumentValue(parameter)],
+				])
 		),
 		...Object.fromEntries(
 			offer.parameters
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
-				.map((parameter: any) => [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)])
+				.flatMap((parameter: any) => [
+					[`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)],
+					[`parameter_uk_${parameter.question.id}_facet`, parameterToUkFacetValue(parameter)],
+				])
 		),
 	}
 }
@@ -193,6 +204,27 @@ function parameterToDocumentValue(parameter: any) {
 	}
 }
 
+function parameterToUkDocumentValue(parameter: any) {
+	switch (parameter.question.type) {
+		case 'radio':
+			return parameter.specificationUK ? `${parameter.valueUK} (${parameter.specificationUK})` : parameter.valueUK
+		case 'checkbox':
+			return parameter.values.map((it: any) => it.specificationUK ? `${it.valueUK} (${it.specificationUK})` : it.valueUK)
+		case 'text':
+			return parameter.valueUK
+		case 'textarea':
+			return parameter.valueUK
+		case 'number':
+			return parameter.numericValue ?? parseInt(parameter.value, 10)
+		case 'date':
+			return parameter.value
+		case 'district':
+			return parameter.values.map((it: any) => it.district?.nameUK ?? it.value)
+		default:
+			return undefined
+	}
+}
+
 
 function parameterToFacetValue(parameter: any) {
 	switch (parameter.question.type) {
@@ -202,6 +234,19 @@ function parameterToFacetValue(parameter: any) {
 			return parameter.values.map((it: any) => it.value)
 		case 'district':
 			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+		default:
+			return undefined
+	}
+}
+
+function parameterToUkFacetValue(parameter: any) {
+	switch (parameter.question.type) {
+		case 'radio':
+			return parameter.valueUK
+		case 'checkbox':
+			return parameter.values.map((it: any) => it.valueUK)
+		case 'district':
+			return parameter.values.map((it: any) => it.district?.nameUK ?? it.value)
 		default:
 			return undefined
 	}
