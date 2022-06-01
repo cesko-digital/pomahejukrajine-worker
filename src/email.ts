@@ -4,6 +4,7 @@ import * as config from './config.js'
 type Payloads = {
 	verification: {
 		verificationUrl: string
+		verificationUrlUk: string
 	}
 	reactionVerification: {
 		verificationUrl: string
@@ -55,7 +56,7 @@ const templates: Templates = {
 			Доброго дня,
 			дякуємо за пропозицію допомоги. Будь ласка, підтвердьте свою електронну пошту, натиснувши посилання нижче а потім встановіть пароль.
 
-			${payload.verificationUrl}
+			${payload.verificationUrlUk}
 
 			Děkujeme!
 			Tým Pomáhej Ukrajině
@@ -134,7 +135,7 @@ const templates: Templates = {
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">дякуємо за пропозицію допомоги. Будь ласка, підтвердьте свою електронну пошту, натиснувши посилання нижче а потім встановіть пароль.</p>
 
-											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrl}">${payload.verificationUrl}</a></p>
+											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrlUk}">${payload.verificationUrlUk}</a></p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
 											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
