@@ -58,8 +58,8 @@ const templates: Templates = {
 
 			${payload.verificationUrlUk}
 
-			Děkujeme!
-			Tým Pomáhej Ukrajině
+			Дякуємо!
+			Колектив Допомагай Україні
 		`,
 		html: `
 			<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -130,15 +130,15 @@ const templates: Templates = {
 										</div>
 
 										<div style="margin-top: 50px;">
-											<h1 style="font-size: 3.75rem; line-height: 1; --tw-text-opacity: 1;color: rgb(17 24 39/var(--tw-text-opacity));">Pomáhej Ukrajině</h1>
+											<h1 style="font-size: 3.75rem; line-height: 1; --tw-text-opacity: 1;color: rgb(17 24 39/var(--tw-text-opacity));">Допомагай Україні</h1>
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Доброго дня,</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">дякуємо за пропозицію допомоги. Будь ласка, підтвердьте свою електронну пошту, натиснувши посилання нижче а потім встановіть пароль.</p>
 
 											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrlUk}">${payload.verificationUrlUk}</a></p>
 
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Дякуємо!</p>
+											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Колектив Допомагай Україні</p>
 										</div>
 
 										</td>
