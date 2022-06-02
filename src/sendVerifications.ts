@@ -7,6 +7,7 @@ const verifyUser = async (id: string, email: string) => {
 	const secretCode = generateSecretCode();
 	await sendEmail(email, "verification", {
 		verificationUrl: `${FRONTEND_URL}/verify?id=${id}&secretCode=${secretCode}`,
+		verificationUrlUk: `${FRONTEND_URL}/uk/verify?id=${id}&secretCode=${secretCode}`,
 	});
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
