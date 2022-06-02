@@ -8,6 +8,7 @@ import {
 	TYPESENSE_PORT,
 	TYPESENSE_PROTOCOL
 } from "./config.js";
+import {Collection, indexAllOfferTypesToTypesense} from "./indexingUtils.js";
 
 const client = TYPESENSE_HOST && new Typesense.Client({
 	'nodes': [{
@@ -19,79 +20,13 @@ const client = TYPESENSE_HOST && new Typesense.Client({
 	'connectionTimeoutSeconds': 2
 })
 
-async function retry(count: number, fn: () => Promise<any>): Promise<any> {
-	try {
-		return await fn()
-	} catch (e) {
-		console.log(`Retry ${count}`)
-		if (count > 0) {
-			return retry(count - 1, fn)
-		} else {
-			throw e
-		}
-	}
-}
-
 export async function indexToTypesense() {
-	const collections = await client.collections().retrieve()
-	const response = await fetch(
-		CONTEMBER_CONTENT_URL,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${CONTEMBER_TOKEN}`,
-			},
-			body: JSON.stringify({
-				query: `
-					{
-						listOfferType {
-							id
-						}
-					}
-				`,
-			}),
-		}
-	)
-
-	const offerTypes = (await response.json() as any)?.data?.listOfferType
-
-	if (!offerTypes || !Array.isArray(offerTypes)) {
-		throw new Error('Error while fetching offer types')
-	}
-	for (const offerType of offerTypes) {
-		const offerTypeId = offerType.id
-		const collectionName = `offers_${offerTypeId}`
-		const collection = collections.find(it => it.name === collectionName)
-		if (!collection) {
-			await client.collections().create({
-				name: collectionName,
-				fields: [
-					{
-						name: '.*',
-						type: 'auto',
-					},
-					{
-						"name": ".*_facet",
-						"type": "auto",
-						"facet": true,
-					},
-				],
-			})
-		}
-		try {
-			await retry(5, async () => {
-				await indexOfferType(offerTypeId)
-			})
-		} catch (e) {
-			console.error(`Error while indexing offer type ${offerTypeId}`, e)
-		}
-	}
+	await indexAllOfferTypesToTypesense(client, async (offerTypeId: string, collection: Collection) => {
+		await indexOfferType(offerTypeId, collection)
+	})
 }
 
-async function indexOfferType(offerTypeId: string) {
-	const collectionName = `offers_${offerTypeId}`
-	const collection = client.collections(collectionName)
+async function indexOfferType(offerTypeId: string, collection: Collection) {
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
