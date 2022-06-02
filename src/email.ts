@@ -8,6 +8,7 @@ type Payloads = {
 	}
 	reactionVerification: {
 		verificationUrl: string
+		verificationUrlUk: string
 	}
 	reaction: {
 		offerTypeName: string
@@ -181,6 +182,17 @@ const templates: Templates = {
 
 			Děkujeme!
 			Tým Pomáhej Ukrajině
+
+			-----
+
+			Доброго дня,
+
+			для передачі контактних даних людині, яка пропонує допомогу, будь ласка підтвердьте ваш е-мейл. Просто натисніть посилання нижче:
+
+			${payload.verificationUrlUk}
+
+			Дякуємо!
+			Колектив Допомагай Україні
 		`,
 		html: `
 			<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -247,6 +259,18 @@ const templates: Templates = {
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
 											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+										</div>
+
+										<div style="margin-top: 50px;">
+											<h1 style="font-size: 3.75rem; line-height: 1; --tw-text-opacity: 1;color: rgb(17 24 39/var(--tw-text-opacity));">Допомагай Україні</h1>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Доброго дня,</p>
+
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">для передачі контактних даних людині, яка пропонує допомогу, будь ласка підтвердьте ваш е-мейл. Просто натисніть посилання нижче:</p>
+
+											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrlUk}">${payload.verificationUrlUk}</a></p>
+
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Дякуємо!</p>
+											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Колектив Допомагай Україні</p>
 										</div>
 
 										</td>
