@@ -84,6 +84,21 @@ export async function indexAllOfferTypesToTypesense(client: Client, index: (offe
 			console.error(`Error while indexing offer type ${offerTypeId}`, e)
 		}
 	}
+
+	await clearCollection(client)
+}
+
+export async function clearCollection(client: Client) {
+	const collections = await client.collections().retrieve()
+	const allCollectionNames = collections.map(it => it.name)
+
+	const aliases = await client.aliases().retrieve()
+	const aliasesCollectionNames = aliases.aliases.map(it => it.collection_name)
+
+	const unusedCollections = allCollectionNames.filter(it => !aliasesCollectionNames.includes(it))
+	for (const unusedCollection of unusedCollections) {
+		await client.collections(unusedCollection).delete()
+	}
 }
 
 export function createCollectionName(offerTypeId: string) {
