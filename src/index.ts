@@ -28,16 +28,16 @@ async function main() {
 			await indexToTypesense()
 		}
 
-		if (i % 70 === 0 && TYPESENSE_HOST_PUBLIC) { // 5 minutes
+		if (i % 70 === 0 && TYPESENSE_HOST_PUBLIC) { // 6 minutes
 			console.log("Indexing to typesense public")
 			await indexToTypesensePublic()
 		}
 
-		if (i % 2 === 0) { // 16 minutes
+		if (i % 200 === 0) { // 16 minutes
 			console.log("Translating...")
 			await translateParameter()
 		}
-		if (i % 3 === 0) { // 16 minutes
+		if (i % 210 === 0) { // 17 minutes
 			console.log("Translating...")
 			await translateParameterValue()
 		}
