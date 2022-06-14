@@ -92,9 +92,13 @@ export async function translate(listForTranslate: ListForTranslate, entityName: 
 	for (const { id, specification, value, specificationUK, valueUK } of listForTranslate) {
 		if (specification) {
 			translations.push({ field: 'specificationUK', translatedValue: await translateText(specification, 'cs'), id })
+		} else if (value) {
 			translations.push({ field: 'valueUK', translatedValue: await translateText(value, 'cs'), id })
 		}
+
+		if (specificationUK) {
 			translations.push({ field: 'specification', translatedValue: await translateText(specificationUK, 'uk'), id })
+		} else if (valueUK) {
 			translations.push({ field: 'value', translatedValue: await translateText(valueUK, 'uk'), id })
 		}
 	}
