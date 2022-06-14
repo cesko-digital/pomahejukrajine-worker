@@ -42,22 +42,6 @@ async function main() {
 			await translateParameterValue()
 		}
 
-		// if (i % 220 === 0) { // some minutes
-		// 	console.log("Translating values...")
-		// 	await translateValues()
-		// }
-
-		// if (i % 2 === 0) { // Every 10 seconds
-		// 	console.log("Translating parameter values...")
-		// 	await translateParameter()
-		// }
-
-		// if (i % 3 === 0) { // Every 15 seconds
-		// 	console.log("Translating parameter specifications...")
-		// 	await translateParameterSpec()
-		// }
-
-
 		i++
 
 		await sleep(5000)
