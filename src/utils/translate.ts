@@ -1,34 +1,20 @@
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from '../config.js'
 
-const parseTranslation = async (id: string, value: string, field: string, isUk?: boolean) => {
-	if (!value.trim().length) {
-		console.log('Skipping empty translation request.', value)
-		return ({ translation: { [field]: value }, id })
-	}
+export type Translatations = {
+	field: string,
+	translatedValue: string,
+	id: string
+}[]
 
-	const params = new URLSearchParams()
-	params.append('input_text', value)
 
-	console.log('Sending CS translation request for ', id)
-	const result = await translateText(value, { isUk })
-
-	if (!result.ok) {
-		console.error('Failed to translate: ', id, result)
-		return
-	}
-
-	const json = await result.json() as string[]
-	return ({ translation: { [field]: json.join(' ') }, id })
-}
-
-export function generateMutation(translations: { translation: { specification?: string }, id: string }[], isValue: boolean): string {
+export function generateMutation(translations: Translatations, entityName: string): string {
 	let mutation = `mutation {`
 	for (let index = 0; index < translations.length; index++) {
-		const key = Object.keys(translations[index].translation)[0]
+		const key = translations[index].field
 		mutation += `
-			update_${index}: updateOfferParameter${isValue ? 'Value' : ''}(
+			update_${index}: update${entityName}(
 				by: { id: "${translations[index].id}" },
-				data: { ${key}: ${JSON.stringify(translations[index].translation[key])} }
+				data: { ${key}: ${JSON.stringify(translations[index].translatedValue)} }
 				) {
 					ok
 					errorMessage
@@ -39,13 +25,18 @@ export function generateMutation(translations: { translation: { specification?: 
 	return mutation
 }
 
-export async function translateText(text: string, options: { isUk: boolean }) {
+export async function translateText(text: string, language: 'cs' | 'uk'): Promise<string | null> {
+	if (!text.trim().length) {
+		console.log('Skipping empty translation request.', text)
+		return text
+	}
+
 	const params = new URLSearchParams()
-	const translate = options.isUk ? { from: 'uk', to: 'cs' } : { from: 'cs', to: 'uk' }
+	const translate = language === 'uk' ? { from: 'uk', to: 'cs' } : { from: 'cs', to: 'uk' }
 
 	params.append('input_text', text)
 
-	return fetch(`https://lindat.cz/translation/api/v2/languages/?src=${translate.from}&tgt=${translate.to}&logInput=true&author=PomahejUkrajine`, {
+	const result = await fetch(`https://lindat.cz/translation/api/v2/languages/?src=${translate.from}&tgt=${translate.to}&logInput=true&author=PomahejUkrajine`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -53,10 +44,18 @@ export async function translateText(text: string, options: { isUk: boolean }) {
 		},
 		body: params
 	})
+
+	if (!result.ok) {
+		console.error('Failed to translate: ', text, result)
+		return
+	}
+
+	const json = await result.json() as string[]
+	return json.join(' ')
 }
 
-export async function saveTranslations(translations: { translation: { specification?: string }, id: string }[], isValue: boolean) {
-	const mutation = generateMutation(translations, isValue)
+export async function saveTranslations(translations: Translatations, entityName: string) {
+	const mutation = generateMutation(translations, entityName)
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
@@ -80,23 +79,25 @@ export async function saveTranslations(translations: { translation: { specificat
 	return
 }
 
-export async function doTranslate(listForTranslate, isValue: boolean) {
+export type ListForTranslate = {
+	id: string,
+	value?: string
+	valueUK?: string
+	specification?: string
+	specificationUK?: string
+}[]
+
+export async function translate(listForTranslate: ListForTranslate, entityName: string) {
 	const translations = []
-	for (const { id, specification, value, specificationUk, valueUK } of listForTranslate) {
+	for (const { id, specification, value, specificationUK, valueUK } of listForTranslate) {
 		if (specification) {
-			translations.push(await parseTranslation(id, specification, 'specificationUK'))
+			translations.push({ field: 'specificationUK', translatedValue: await translateText(specification, 'cs'), id })
+			translations.push({ field: 'valueUK', translatedValue: await translateText(value, 'cs'), id })
 		}
-		if (value) {
-			translations.push(await parseTranslation(id, value, 'valueUK'))
-		}
-		if (specificationUk) {
-			translations.push(await parseTranslation(id, specificationUk, 'specification', true))
-		}
-		if (valueUK) {
-			translations.push(await parseTranslation(id, valueUK, 'value', true))
+			translations.push({ field: 'specification', translatedValue: await translateText(specificationUK, 'uk'), id })
+			translations.push({ field: 'value', translatedValue: await translateText(valueUK, 'uk'), id })
 		}
 	}
 
-
-	saveTranslations(translations, isValue)
+	saveTranslations(translations, entityName)
 }

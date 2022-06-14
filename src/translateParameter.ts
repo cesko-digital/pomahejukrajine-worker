@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import { doTranslate } from './utils/translate.js'
+import { translate } from './utils/translate.js'
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from "./config.js"
 
 export async function translateParameter() {
@@ -62,10 +62,10 @@ export async function translateParameter() {
 	console.log('Translate UA: ', translateUACS)
 
 	if (translateCSUA.length) {
-		doTranslate(translateCSUA, false)
+		translate(translateCSUA, 'OfferParameter')
 	}
 	if (translateUACS.length) {
-		doTranslate(translateUACS, false)
+		translate(translateUACS, 'OfferParameter')
 	}
 
 	return
