@@ -4,10 +4,8 @@ import { sendReactions } from "./sendReactions.js"
 import { indexToTypesense } from "./indexSearch.js"
 import { indexToTypesensePublic } from "./indexSearchPublic.js"
 import { TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC } from "./config.js"
-import { translate } from "./translate.js"
-import { translateValues } from "./translateValues.js"
-import { translateParameter } from "./translateParameter.js"
-import { translateParameterSpec } from "./translateParameterSpec.js"
+import { translateParameter } from './translateParameter.js'
+import { translateParameterValue } from './translateParameterValue.js'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -35,25 +33,29 @@ async function main() {
 			await indexToTypesensePublic()
 		}
 
-		if (i % 200 === 0) { // 16 minutes
+		if (i % 2 === 0) { // 16 minutes
 			console.log("Translating...")
-			await translate()
-		}
-
-		if (i % 220 === 0) { // some minutes
-			console.log("Translating values...")
-			await translateValues()
-		}
-
-		if (i % 2 === 0) { // Every 10 seconds
-			console.log("Translating parameter values...")
 			await translateParameter()
 		}
-
-		if (i % 3 === 0) { // Every 15 seconds
-			console.log("Translating parameter specifications...")
-			await translateParameterSpec()
+		if (i % 3 === 0) { // 16 minutes
+			console.log("Translating...")
+			await translateParameterValue()
 		}
+
+		// if (i % 220 === 0) { // some minutes
+		// 	console.log("Translating values...")
+		// 	await translateValues()
+		// }
+
+		// if (i % 2 === 0) { // Every 10 seconds
+		// 	console.log("Translating parameter values...")
+		// 	await translateParameter()
+		// }
+
+		// if (i % 3 === 0) { // Every 15 seconds
+		// 	console.log("Translating parameter specifications...")
+		// 	await translateParameterSpec()
+		// }
 
 
 		i++

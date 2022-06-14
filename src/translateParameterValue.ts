@@ -2,7 +2,7 @@ import fetch from "node-fetch"
 import { doTranslate } from './utils/translate.js'
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from "./config.js"
 
-export async function translateParameter() {
+export async function translateParameterValue() {
 	const response = await fetch(CONTEMBER_CONTENT_URL, {
 		method: 'POST',
 		headers: {
@@ -12,7 +12,7 @@ export async function translateParameter() {
 		body: JSON.stringify({
 			query: `
 				query {
-					translateCSUA: listOfferParameter(
+					translateCSUA: listOfferParameterValue(
 						filter: {
 							or: [
 								{ and: { value: { isNull: false }, valueUK: { isNull: true } } }
@@ -30,7 +30,7 @@ export async function translateParameter() {
 						specification
 						value
 					}
-					translateUACS: listOfferParameter(
+					translateUACS: listOfferParameterValue(
 						filter: {
 							or: [
 								{ and: { value: { isNull: true }, valueUK: { isNull: false } } }
@@ -56,16 +56,16 @@ export async function translateParameter() {
 	const data = (await response.json() as any)?.data
 
 	const translateCSUA = data?.translateCSUA
-	console.log('Translate CS: ', translateCSUA)
+	console.log('Translate value CS: ', translateCSUA)
 
 	const translateUACS = data?.translateUACS
-	console.log('Translate UA: ', translateUACS)
+	console.log('Translate value UA: ', translateUACS)
 
 	if (translateCSUA.length) {
-		doTranslate(translateCSUA, false)
+		doTranslate(translateCSUA, true)
 	}
 	if (translateUACS.length) {
-		doTranslate(translateUACS, false)
+		doTranslate(translateUACS, true)
 	}
 
 	return
