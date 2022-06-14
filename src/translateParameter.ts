@@ -15,7 +15,12 @@ export async function translateParameter() {
 					translateCSUA: listOfferParameter(
 						filter: {
 							or: [
-								{ and: { value: { isNull: false }, valueUK: { isNull: true } } }
+								{
+									and: {
+										value: { isNull: false },
+										valueUK: { isNull: true }
+									}
+								}
 								{
 									and: {
 										specification: { isNull: false }
@@ -33,7 +38,12 @@ export async function translateParameter() {
 					translateUACS: listOfferParameter(
 						filter: {
 							or: [
-								{ and: { value: { isNull: true }, valueUK: { isNull: false } } }
+								{
+									and: {
+										value: { isNull: true },
+										valueUK: { isNull: false }
+									}
+								}
 								{
 									and: {
 										specification: { isNull: true }
@@ -68,8 +78,4 @@ export async function translateParameter() {
 		translate(translateUACS, 'OfferParameter')
 	}
 
-	return
 }
-
-
-
