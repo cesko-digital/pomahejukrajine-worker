@@ -12,7 +12,7 @@ export async function translateParameters(entityName: 'OfferParameterValue' | 'O
 		body: JSON.stringify({
 			query: `
 				query {
-					translateCSUA: list${entityName}(
+					parametersToTranslate: list${entityName}(
 						filter: {
 							or: [
 								{
@@ -27,17 +27,6 @@ export async function translateParameters(entityName: 'OfferParameterValue' | 'O
 										specificationUK: { isNull: true }
 									}
 								}
-							]
-						}
-						limit: 10
-					) {
-						id
-						specification
-						value
-					}
-					translateUACS: list${entityName}(
-						filter: {
-							or: [
 								{
 									and: {
 										value: { isNull: true }
@@ -55,6 +44,8 @@ export async function translateParameters(entityName: 'OfferParameterValue' | 'O
 						limit: 10
 					) {
 						id
+						value
+						specification
 						specificationUK
 						valueUK
 					}
@@ -63,19 +54,18 @@ export async function translateParameters(entityName: 'OfferParameterValue' | 'O
 		}),
 	})
 
+	if (!response.ok) {
+		console.error('Failed to get parameters to translate: ', await response.text())
+		return
+	}
+
 	const data = (await response.json() as any)?.data
 
-	const translateCSUA = data?.translateCSUA
-	console.log('Translate value CS: ', translateCSUA)
+	const parametersToTranslate = data?.parametersToTranslate
+	console.log('Translate: ', parametersToTranslate)
 
-	const translateUACS = data?.translateUACS
-	console.log('Translate value UA: ', translateUACS)
-
-	if (translateCSUA.length) {
-		translate(translateCSUA, entityName)
-	}
-	if (translateUACS.length) {
-		translate(translateUACS, entityName)
+	if (parametersToTranslate.length) {
+		translate(parametersToTranslate, entityName)
 	}
 }
 

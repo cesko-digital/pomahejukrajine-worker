@@ -88,15 +88,17 @@ export type ListForTranslate = {
 export async function translate(listForTranslate: ListForTranslate, entityName: string) {
 	const translations = []
 	for (const { id, specification, value, specificationUK, valueUK } of listForTranslate) {
-		if (specification) {
+		if (specification && specificationUK === null) {
 			translations.push({ field: 'specificationUK', translatedValue: await translateText(specification, 'cs'), id })
-		} else if (value) {
+		}
+		if (value && valueUK === null) {
 			translations.push({ field: 'valueUK', translatedValue: await translateText(value, 'cs'), id })
 		}
 
-		if (specificationUK) {
+		if (specificationUK && specification === null) {
 			translations.push({ field: 'specification', translatedValue: await translateText(specificationUK, 'uk'), id })
-		} else if (valueUK) {
+		}
+		if (valueUK && value === null) {
 			translations.push({ field: 'value', translatedValue: await translateText(valueUK, 'uk'), id })
 		}
 	}
