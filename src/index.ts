@@ -4,8 +4,7 @@ import { sendReactions } from "./sendReactions.js"
 import { indexToTypesense } from "./indexSearch.js"
 import { indexToTypesensePublic } from "./indexSearchPublic.js"
 import { TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC } from "./config.js"
-import { translateParameter } from './translateParameter.js'
-import { translateParameterValue } from './translateParameterValue.js'
+import { translateParameters } from './translateParameters.js'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -35,11 +34,11 @@ async function main() {
 
 		if (i % 200 === 0) { // 16 minutes
 			console.log("Translating...")
-			await translateParameter()
+			await translateParameters('OfferParameter')
 		}
 		if (i % 210 === 0) { // 17 minutes
 			console.log("Translating...")
-			await translateParameterValue()
+			await translateParameters('OfferParameterValue')
 		}
 
 		i++

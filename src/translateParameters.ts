@@ -2,7 +2,7 @@ import fetch from "node-fetch"
 import { translate } from './utils/translate.js'
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from "./config.js"
 
-export async function translateParameterValue() {
+export async function translateParameters(entityName: 'OfferParameterValue' | 'OfferParameter') {
 	const response = await fetch(CONTEMBER_CONTENT_URL, {
 		method: 'POST',
 		headers: {
@@ -12,10 +12,15 @@ export async function translateParameterValue() {
 		body: JSON.stringify({
 			query: `
 				query {
-					translateCSUA: listOfferParameterValue(
+					translateCSUA: list${entityName}(
 						filter: {
 							or: [
-								{ and: { value: { isNull: false }, valueUK: { isNull: true } } }
+								{
+									and: {
+										value: { isNull: false }
+										valueUK: { isNull: true }
+									}
+								}
 								{
 									and: {
 										specification: { isNull: false }
@@ -30,10 +35,15 @@ export async function translateParameterValue() {
 						specification
 						value
 					}
-					translateUACS: listOfferParameterValue(
+					translateUACS: list${entityName}(
 						filter: {
 							or: [
-								{ and: { value: { isNull: true }, valueUK: { isNull: false } } }
+								{
+									and: {
+										value: { isNull: true }
+										valueUK: { isNull: false }
+									}
+								}
 								{
 									and: {
 										specification: { isNull: true }
@@ -62,10 +72,10 @@ export async function translateParameterValue() {
 	console.log('Translate value UA: ', translateUACS)
 
 	if (translateCSUA.length) {
-		translate(translateCSUA, 'OfferParameterValue')
+		translate(translateCSUA, entityName)
 	}
 	if (translateUACS.length) {
-		translate(translateUACS, 'OfferParameterValue')
+		translate(translateUACS, entityName)
 	}
 }
 

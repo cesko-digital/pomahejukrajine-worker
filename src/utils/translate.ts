@@ -7,7 +7,7 @@ export type Translatations = {
 }[]
 
 
-export function generateMutation(translations: Translatations, entityName: string): string {
+function generateMutation(translations: Translatations, entityName: string): string {
 	let mutation = `mutation {`
 	for (let index = 0; index < translations.length; index++) {
 		const key = translations[index].field
@@ -25,7 +25,7 @@ export function generateMutation(translations: Translatations, entityName: strin
 	return mutation
 }
 
-export async function translateText(text: string, language: 'cs' | 'uk'): Promise<string | null> {
+async function translateText(text: string, language: 'cs' | 'uk'): Promise<string | null> {
 	if (!text.trim().length) {
 		console.log('Skipping empty translation request.', text)
 		return text
@@ -47,7 +47,7 @@ export async function translateText(text: string, language: 'cs' | 'uk'): Promis
 
 	if (!result.ok) {
 		console.error('Failed to translate: ', text, result)
-		return
+		return null
 	}
 
 	const json = await result.json() as string[]
@@ -75,8 +75,6 @@ export async function saveTranslations(translations: Translatations, entityName:
 	} else {
 		console.error('Translations failed to save: ', response)
 	}
-
-	return
 }
 
 export type ListForTranslate = {
