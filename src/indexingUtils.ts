@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import {CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN} from "./config.js";
-import {retry} from "./utils.js";
+import {retry} from "./utils/index.js";
 import {Client} from "typesense";
 
 export type Collection = ReturnType<(typeof Client)["prototype"]["collections"]>
