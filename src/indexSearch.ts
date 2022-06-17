@@ -17,7 +17,7 @@ const client = TYPESENSE_HOST && new Typesense.Client({
 		'protocol': TYPESENSE_PROTOCOL,
 	}],
 	'apiKey': TYPESENSE_API_KEY,
-	'connectionTimeoutSeconds': 2
+	'connectionTimeoutSeconds': 10
 })
 
 export async function indexToTypesense() {

@@ -17,7 +17,7 @@ const client = TYPESENSE_HOST_PUBLIC && new Typesense.Client({
 		'protocol': TYPESENSE_PROTOCOL_PUBLIC,
 	}],
 	'apiKey': TYPESENSE_API_KEY_PUBLIC,
-	'connectionTimeoutSeconds': 2
+	'connectionTimeoutSeconds': 10
 })
 
 export async function indexToTypesensePublic() {
