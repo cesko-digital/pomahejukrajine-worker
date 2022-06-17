@@ -53,9 +53,18 @@ export async function indexAllOfferTypesToTypesense(client: Client, index: (offe
 
 			// Index into new collection
 			const collection = await client.collections(newCollectionName)
-			await retry(5, async () => {
-				return await index(offerTypeId, collection)
-			})
+			try {
+				await retry(5, async () => {
+					return await index(offerTypeId, collection)
+				})
+			} catch (e) {
+				if (e && 'importResults' in e && Array.isArray(e.importResults)) {
+					const failed = e.importResults.filter((it: unknown) => (typeof it != 'object') || !('success' in it) || !(it as {success: unknown}).success)
+					console.log('failed import result: ', JSON.stringify(failed))
+				}
+				throw e
+			}
+
 
 			// Swap collections (alias)
 
