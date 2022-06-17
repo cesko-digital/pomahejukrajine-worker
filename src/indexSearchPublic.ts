@@ -152,7 +152,7 @@ function parameterToUkDocumentValue(parameter: any) {
 		case 'radio':
 			return parameter.specificationUK ? `${parameter.valueUK} (${parameter.specificationUK})` : parameter.valueUK
 		case 'checkbox':
-			return parameter.values.map((it: any) => it.specificationUK ? `${it.valueUK} (${it.specificationUK})` : it.valueUK)
+			return parameter.values.map((it: any) => it.specificationUK ? `${it.valueUK} (${it.specificationUK})` : it.valueUK).filter(it => it !== null)
 		case 'text':
 			return parameter.valueUK
 		case 'textarea':
