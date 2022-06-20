@@ -1,24 +1,27 @@
-import fetch from 'node-fetch';
-import {CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN, FRONTEND_URL} from "./config.js";
-import {sendEmail} from "./email.js";
-import {generateSecretCode} from "./utils.js";
+import fetch from "node-fetch";
+import {
+	CONTEMBER_CONTENT_URL,
+	CONTEMBER_TOKEN,
+	FRONTEND_URL,
+} from "./config.js";
+import { UKRAINIAN_CODE } from "./constant.js";
+import { sendEmail } from "./email.js";
+import { generateSecretCode } from "./utils.js";
 
 const verifyUser = async (id: string, email: string) => {
 	const secretCode = generateSecretCode();
 	await sendEmail(email, "verification", {
 		verificationUrl: `${FRONTEND_URL}/verify?id=${id}&secretCode=${secretCode}`,
-		verificationUrlUk: `${FRONTEND_URL}/uk/verify?id=${id}&secretCode=${secretCode}`,
+		verificationUrlUk: `${FRONTEND_URL}/${UKRAINIAN_CODE}/verify?id=${id}&secretCode=${secretCode}`,
 	});
-	const response = await fetch(
-		CONTEMBER_CONTENT_URL,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${CONTEMBER_TOKEN}`,
-			},
-			body: JSON.stringify({
-				query: `
+	const response = await fetch(CONTEMBER_CONTENT_URL, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${CONTEMBER_TOKEN}`,
+		},
+		body: JSON.stringify({
+			query: `
 					mutation ($id: UUID!, $secretCode: String!) {
 						updateVolunteer(
 							by: { id: $id }
@@ -28,31 +31,30 @@ const verifyUser = async (id: string, email: string) => {
 						}
 					}
 				`,
-				variables: {
-					id,
-					secretCode,
-				},
-			}),
-		}
-	)
+			variables: {
+				id,
+				secretCode,
+			},
+		}),
+	});
 
 	if (!response.ok) {
 		// console.log(await response.text());
-		throw new Error(`Failed saving secret code from verification email: ${response.statusText}`)
+		throw new Error(
+			`Failed saving secret code from verification email: ${response.statusText}`
+		);
 	}
-}
+};
 
 export const sendVerifications = async () => {
-	const listResponse = await fetch(
-		CONTEMBER_CONTENT_URL,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${CONTEMBER_TOKEN}`,
-			},
-			body: JSON.stringify({
-				query: `
+	const listResponse = await fetch(CONTEMBER_CONTENT_URL, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${CONTEMBER_TOKEN}`,
+		},
+		body: JSON.stringify({
+			query: `
 					{
 						listVolunteer(
 							filter: {
@@ -68,19 +70,22 @@ export const sendVerifications = async () => {
 							email
 						}
 					}
-				`
-			}),
-		}
-	)
-	const listJson = listResponse.ok ? await listResponse.json() : undefined
-	const list: undefined | { id: string; email: string; }[] = listJson ? (listJson as any)?.data?.listVolunteer : undefined
+				`,
+		}),
+	});
+	const listJson = listResponse.ok ? await listResponse.json() : undefined;
+	const list: undefined | { id: string; email: string }[] = listJson
+		? (listJson as any)?.data?.listVolunteer
+		: undefined;
 
 	for (const { id, email } of list) {
 		try {
-			console.log(`Sending verification email to ${email}`)
-			await verifyUser(id, email)
+			console.log(`Sending verification email to ${email}`);
+			await verifyUser(id, email);
 		} catch (e) {
-			console.error(`Failed sending verification email to ${email}: ${e.message}`)
+			console.error(
+				`Failed sending verification email to ${email}: ${e.message}`
+			);
 		}
 	}
-}
+};
