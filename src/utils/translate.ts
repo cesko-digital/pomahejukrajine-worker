@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from '../config.js'
 
 export type Translatations = {
