@@ -187,9 +187,9 @@ function parameterToUkFacetValue(parameter: any) {
 		case 'radio':
 			return parameter.valueUK
 		case 'checkbox':
-			return parameter.values.map((it: any) => it.valueUK)
+			return parameter.values.map((it: any) => it.valueUK).filter(it => it.district != null)
 		case 'district':
-			return parameter.values.map((it: any) => it.district?.nameUK ?? it.value)
+			return parameter.values.map((it: any) => it.district?.nameUK ?? it.value).filter(it => it.district != null)
 		default:
 			return undefined
 	}
