@@ -54,7 +54,7 @@ export async function indexAllOfferTypesToTypesense(client: Client, index: (offe
 			// Index into new collection
 			const collection = await client.collections(newCollectionName)
 			try {
-				await retry(5, async () => {
+				await retry(0, async () => {
 					return await index(offerTypeId, collection)
 				})
 			} catch (e) {
