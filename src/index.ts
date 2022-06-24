@@ -22,21 +22,21 @@ async function main() {
 		console.log("Sending reactions...")
 		await sendReactions()
 
-		if (i % 60 === 0 && TYPESENSE_HOST) { // 5 minutes
+		if (i % 200 === 0 && TYPESENSE_HOST) { // 16 minutes
 			console.log("Indexing to typesense")
 			await indexToTypesense()
 		}
 
-		if (i % 70 === 0 && TYPESENSE_HOST_PUBLIC) { // 6 minutes
+		if (i % 210 === 0 && TYPESENSE_HOST_PUBLIC) { // 17 minutes
 			console.log("Indexing to typesense public")
 			await indexToTypesensePublic()
 		}
 
-		if (i % 200 === 0) { // 16 minutes
+		if (i % 2 === 0) { // 10 seconds
 			console.log("Translating...")
 			await translateParameters('OfferParameter')
 		}
-		if (i % 210 === 0) { // 17 minutes
+		if (i % 5 === 0) { // 25 seconds
 			console.log("Translating...")
 			await translateParameters('OfferParameterValue')
 		}
