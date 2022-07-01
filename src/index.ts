@@ -32,11 +32,11 @@ async function main() {
 			await indexToTypesensePublic()
 		}
 
-		if (i % 2 === 0) { // 10 seconds
+		if (i % 50 === 0) { // 10 seconds
 			console.log("Translating...")
 			await translateParameters('OfferParameter')
 		}
-		if (i % 5 === 0) { // 25 seconds
+		if (i % 60 === 0) { // 25 seconds
 			console.log("Translating...")
 			await translateParameters('OfferParameterValue')
 		}
