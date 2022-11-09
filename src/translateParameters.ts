@@ -60,9 +60,7 @@ export async function translateParameters(entityName: 'OfferParameterValue' | 'O
 	}
 
 	const data = (await response.json() as any)?.data
-
 	const parametersToTranslate = data?.parametersToTranslate
-	console.log('Translate: ', parametersToTranslate)
 
 	if (parametersToTranslate.length) {
 		translate(parametersToTranslate, entityName)
