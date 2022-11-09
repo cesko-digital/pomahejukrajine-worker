@@ -57,6 +57,7 @@ async function translateText(text: string, language: 'cs' | 'uk'): Promise<strin
 
 export async function saveTranslations(translations: Translatations, entityName: string) {
 	const mutation = generateMutation(translations, entityName)
+	console.log(mutation)
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
@@ -70,6 +71,7 @@ export async function saveTranslations(translations: Translatations, entityName:
 			}),
 		}
 	)
+	console.log(JSON.stringify(response))
 
 	if (response.ok) {
 		console.log('Translations saved.')
