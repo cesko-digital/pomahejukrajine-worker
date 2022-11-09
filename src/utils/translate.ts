@@ -52,6 +52,7 @@ async function translateText(text: string, language: 'cs' | 'uk'): Promise<strin
 	}
 
 	const json = await result.json() as string[]
+	console.log(json)
 	return json.join(' ')
 }
 
@@ -105,6 +106,6 @@ export async function translate(listForTranslate: ListForTranslate, entityName: 
 			translations.push({ field: 'value', translatedValue: await translateText(valueUK, 'uk'), id })
 		}
 	}
-
+	console.log(translations)
 	saveTranslations(translations, entityName)
 }
