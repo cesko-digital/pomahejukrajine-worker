@@ -1,14 +1,13 @@
-import fetch from "node-fetch";
+import fetch from "node-fetch"
 import { CONTEMBER_CONTENT_URL, CONTEMBER_TOKEN } from '../config.js'
 
-export type Translatations = {
+export type Translations = {
 	field: string,
 	translatedValue: string,
 	id: string
 }[]
 
-
-function generateMutation(translations: Translatations, entityName: string): string {
+function generateMutation(translations: Translations, entityName: string): string {
 	let mutation = `mutation {`
 	for (let index = 0; index < translations.length; index++) {
 		const key = translations[index].field
@@ -56,9 +55,8 @@ async function translateText(text: string, language: 'cs' | 'uk'): Promise<strin
 	return json.join(' ')
 }
 
-export async function saveTranslations(translations: Translatations, entityName: string) {
+export async function saveTranslations(translations: Translations, entityName: string) {
 	const mutation = generateMutation(translations, entityName)
-	console.log(mutation)
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
 		{
@@ -72,12 +70,11 @@ export async function saveTranslations(translations: Translatations, entityName:
 			}),
 		}
 	)
-	console.log(JSON.stringify(response))
 
 	if (response.ok) {
 		console.log('Translations saved.')
 	} else {
-		console.error('Translations failed to save: ', response)
+		console.error('Translations failed to save: ', { error: await response.text(), mutation })
 	}
 }
 
@@ -92,20 +89,18 @@ export type ListForTranslate = {
 export async function translate(listForTranslate: ListForTranslate, entityName: string) {
 	const translations = []
 	for (const { id, specification, value, specificationUK, valueUK } of listForTranslate) {
-		if (specification && specificationUK === null) {
+		if (typeof specification === 'string' && specificationUK === null) {
 			translations.push({ field: 'specificationUK', translatedValue: await translateText(specification, 'cs'), id })
 		}
-		if (value && valueUK === null) {
+		if (typeof value === 'string' && valueUK === null) {
 			translations.push({ field: 'valueUK', translatedValue: await translateText(value, 'cs'), id })
 		}
-
-		if (specificationUK && specification === null) {
+		if (typeof specificationUK === 'string' && specification === null) {
 			translations.push({ field: 'specification', translatedValue: await translateText(specificationUK, 'uk'), id })
 		}
-		if (valueUK && value === null) {
+		if (typeof valueUK === 'string' && value === null) {
 			translations.push({ field: 'value', translatedValue: await translateText(valueUK, 'uk'), id })
 		}
 	}
-	console.log(translations)
 	saveTranslations(translations, entityName)
 }
