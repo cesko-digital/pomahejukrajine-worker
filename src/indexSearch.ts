@@ -117,6 +117,7 @@ function offerToDocument(offer: any) {
 				.map((parameter: any) => [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)])
 		),
 		status_name: offer.status?.name,
+		status_name_facet: offer.status?.name,
 	}
 }
 
