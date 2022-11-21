@@ -1,5 +1,5 @@
 import Typesense from 'typesense'
-import fetch from "node-fetch";
+import fetch from "node-fetch"
 import {
 	CONTEMBER_CONTENT_URL,
 	CONTEMBER_TOKEN,
@@ -7,8 +7,8 @@ import {
 	TYPESENSE_HOST,
 	TYPESENSE_PORT,
 	TYPESENSE_PROTOCOL
-} from "./config.js";
-import {Collection, indexAllOfferTypesToTypesense} from "./indexingUtils.js";
+} from "./config.js"
+import { Collection, indexAllOfferTypesToTypesense } from "./indexingUtils.js"
 
 const client = TYPESENSE_HOST && new Typesense.Client({
 	'nodes': [{
@@ -55,6 +55,10 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 								phone
 							}
 							logs { text }
+							status {
+								id
+								name
+							}
 							parameters {
 								question {
 									id
@@ -80,7 +84,7 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 		}
 	)
 
-	const listOfferResponse = await response.json() as any;
+	const listOfferResponse = await response.json() as any
 	const offers = listOfferResponse?.data?.listOffer
 
 	if (!offers || !Array.isArray(offers)) {
@@ -112,6 +116,7 @@ function offerToDocument(offer: any) {
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
 				.map((parameter: any) => [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)])
 		),
+		status: { ...offer.status }
 	}
 }
 
