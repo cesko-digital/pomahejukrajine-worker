@@ -116,7 +116,7 @@ function offerToDocument(offer: any) {
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
 				.map((parameter: any) => [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)])
 		),
-		status: { ...offer.status }
+		status_name: offer.status.name,
 	}
 }
 
