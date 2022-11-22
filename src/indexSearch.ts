@@ -152,7 +152,15 @@ function parameterToFacetValue(parameter: any) {
 		case 'checkbox':
 			return parameter.values.map((it: any) => it.value)
 		case 'district':
-			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+			console.log(parameter.values)
+			return parameter.values.map((it: any) => {
+				console.log(it.district?.name)
+				if (it.district?.name == "Celá ČR") {
+					return it.district?.name
+				} else {
+					it.district?.name ?? it.value
+				}
+			})
 		case 'image':
 			return parameter.value
 		default:
