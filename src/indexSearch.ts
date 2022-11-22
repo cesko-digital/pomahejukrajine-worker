@@ -114,7 +114,29 @@ function offerToDocument(offer: any) {
 		...Object.fromEntries(
 			offer.parameters
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
-				.map((parameter: any) => [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)])
+				.map((parameter: any) => {
+					if(parameterToFacetValue(parameter) == "Celá ČR") {
+						[
+							`parameter_${parameter.question.id}_facet`, "Celá ČR",
+							`parameter_${parameter.question.id}_facet`, "Hlavní město Praha",
+							`parameter_${parameter.question.id}_facet`, "Středočeský kraj",
+							`parameter_${parameter.question.id}_facet`, "Jihomoravský kraj",
+							`parameter_${parameter.question.id}_facet`, "Moravskoslezský kraj",
+							`parameter_${parameter.question.id}_facet`, "Ústecký kraj",
+							`parameter_${parameter.question.id}_facet`, "Plzeňský kraj",
+							`parameter_${parameter.question.id}_facet`, "Královéhradecký kraj",
+							`parameter_${parameter.question.id}_facet`, "Jihočeský kraj",
+							`parameter_${parameter.question.id}_facet`, "Olomoucký kraj",
+							`parameter_${parameter.question.id}_facet`, "Zlínský kraj",
+							`parameter_${parameter.question.id}_facet`, "Pardubický kraj",
+							`parameter_${parameter.question.id}_facet`, "Kraj Vysočina",
+							`parameter_${parameter.question.id}_facet`, "Liberecký kraj",
+							`parameter_${parameter.question.id}_facet`, "Karlovarský kraj"
+						]
+					} else {
+						[`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)]
+					}
+				})
 		),
 		status_name: offer.status?.name,
 		status_name_facet: offer.status?.name,
