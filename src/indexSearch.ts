@@ -137,6 +137,8 @@ function parameterToDocumentValue(parameter: any) {
 			return parameter.value
 		case 'district':
 			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+		case 'image':
+			return parameter.value
 		default:
 			return undefined
 	}
@@ -151,6 +153,8 @@ function parameterToFacetValue(parameter: any) {
 			return parameter.values.map((it: any) => it.value)
 		case 'district':
 			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+		case 'image':
+			return parameter.value
 		default:
 			return undefined
 	}
