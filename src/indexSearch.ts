@@ -10,6 +10,54 @@ import {
 } from "./config.js"
 import { Collection, indexAllOfferTypesToTypesense } from "./indexingUtils.js"
 
+type Parameter = {
+	question: {
+		id: string
+		type: string
+	}
+	value: string
+	numericValue: number
+	specification: string
+	values: Value[]
+}
+
+type Value = {
+	value: string
+	numericValue: number
+	specification: string
+	district: {
+		name: string
+	}
+}
+
+type Volunteer = {
+	name: string
+	email: string
+	phone: string
+}
+
+type Offer = {
+	id: string
+	volunteer: Volunteer
+	logs: { text: string }[]
+	status: {
+		id: string
+		name: string
+	}
+	parameters: Parameter[]
+	value: string
+	numericValue: number
+	specification: string
+	values: Value[]
+}
+
+type ListOffer = {
+	data: {
+		listOffer: Offer[]
+	}
+}
+
+
 const client = TYPESENSE_HOST && new Typesense.Client({
 	'nodes': [{
 		'host': TYPESENSE_HOST,
@@ -84,14 +132,14 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 		}
 	)
 
-	const listOfferResponse = await response.json() as any
+	const listOfferResponse = await response.json() as ListOffer
 	const offers = listOfferResponse?.data?.listOffer
 
 	if (!offers || !Array.isArray(offers)) {
 		throw new Error(`Error while fetching offers ${JSON.stringify(listOfferResponse)}`)
 	}
 
-	const documents = offers.map((it: any) => offerToDocument(it))
+	const documents = offers.map((it) => offerToDocument(it))
 	const importResponses = await collection.documents().import(documents, { action: 'upsert' })
 
 	const errors = importResponses.filter(it => !it.success)
@@ -100,25 +148,26 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 	}
 }
 
-function offerToDocument(offer: any) {
+
+function offerToDocument(offer: Offer) {
 	return {
 		id: offer.id,
 		volunteer_name: offer.volunteer.name,
 		volunteer_email: offer.volunteer.email,
 		volunteer_phone: offer.volunteer.phone,
-		logs: offer.logs.map((it: any) => it.text),
+		logs: offer.logs.map((it) => it.text),
 		...Object.fromEntries(
 			offer.parameters
-				.map((parameter: any) => [`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)])
+				.map((parameter) => [`parameter_${parameter.question.id}`, parameterToDocumentValue(parameter)])
 		),
 		...Object.fromEntries(
 			offer.parameters
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
-				.map((parameter: any) => {
-					if(parameterToFacetValue(parameter) == "Celá ČR") {
-						[`facet_${parameter.question.id}`, ["Hlavní město Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj", "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj", "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Zlínský kraj", "Moravskoslezský kraj"]]
+				.map((parameter) => {
+					if (parameterToFacetValue(parameter).includes('Celá ČR') || parameterToFacetValue(parameter) === 'Celá ČR') {
+						return [`parameter_${parameter.question.id}_facet`, ["Hlavní město Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj", "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj", "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Zlínský kraj", "Moravskoslezský kraj"]]
 					} else {
-						[`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)]
+						return [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)]
 					}
 				})
 		),
@@ -127,12 +176,12 @@ function offerToDocument(offer: any) {
 	}
 }
 
-function parameterToDocumentValue(parameter: any) {
+function parameterToDocumentValue(parameter: Parameter): number | string | string[] | undefined {
 	switch (parameter.question.type) {
 		case 'radio':
 			return parameter.specification ? `${parameter.value} (${parameter.specification})` : parameter.value
 		case 'checkbox':
-			return parameter.values.map((it: any) => it.specification ? `${it.value} (${it.specification})` : it.value)
+			return parameter.values.map((it) => it.specification ? `${it.value} (${it.specification})` : it.value)
 		case 'text':
 			return parameter.value
 		case 'textarea':
@@ -142,7 +191,7 @@ function parameterToDocumentValue(parameter: any) {
 		case 'date':
 			return parameter.value
 		case 'district':
-			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+			return parameter.values.map((it) => it.district?.name ?? it.value)
 		case 'image':
 			return parameter.value
 		default:
@@ -151,14 +200,14 @@ function parameterToDocumentValue(parameter: any) {
 }
 
 
-function parameterToFacetValue(parameter: any) {
+function parameterToFacetValue(parameter: Parameter): string[] | string | undefined {
 	switch (parameter.question.type) {
 		case 'radio':
 			return parameter.value
 		case 'checkbox':
-			return parameter.values.map((it: any) => it.value)
+			return parameter.values.map((it) => it.value)
 		case 'district':
-			return parameter.values.map((it: any) => it.district?.name ?? it.value)
+			return parameter.values.map((it) => it.district?.name ?? it.value)
 		case 'image':
 			return parameter.value
 		default:
