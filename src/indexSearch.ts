@@ -165,15 +165,13 @@ function offerToDocument(offer: Offer) {
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
 				.map((parameter) => {
 					let searchableParam = parameterToFacetValue(parameter)
-					console.log("start")
 					console.log(searchableParam)
-					let country = searchableParam.includes("Celá ČR")
-					console.log(country)
-					console.log("end")
-					if (parameterToFacetValue(parameter).includes('Celá ČR') || parameterToFacetValue(parameter) === 'Celá ČR') {
+					if (searchableParam.includes('Celá ČR') || searchableParam === 'Celá ČR') {
+						console.log("true")
 						return [`parameter_${parameter.question.id}_facet`, ["Hlavní město Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj", "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj", "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Zlínský kraj", "Moravskoslezský kraj"]]
+					} else {
+						return [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)]
 					}
-					return [`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)]
 				})
 		),
 		status_name: offer.status?.name,
