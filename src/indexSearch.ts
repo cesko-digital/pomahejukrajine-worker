@@ -164,6 +164,8 @@ function offerToDocument(offer: Offer) {
 			offer.parameters
 				.filter(it => ["checkbox", "radio", "district"].includes(it.question.type))
 				.map((parameter) => {
+					console.log(parameter)
+					console.log(parameterToFacetValue(parameter))
 					if (parameterToFacetValue(parameter).includes('Celá ČR') || parameterToFacetValue(parameter) === 'Celá ČR') {
 						return [`parameter_${parameter.question.id}_facet`, ["Hlavní město Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj", "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj", "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Zlínský kraj", "Moravskoslezský kraj"]]
 					}
