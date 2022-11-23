@@ -118,7 +118,7 @@ function offerToDocument(offer: any) {
 					[`parameter_${parameter.question.id}_facet`, parameterToFacetValue(parameter)],
 					[`parameter_uk_${parameter.question.id}_facet`, parameterToUkFacetValue(parameter)],
 					...((parameter.question.type === "district" && parameter.values.every(it => it.district != null)) ? [
-						...(parameter.values.district.includes('Celá ČR')) ? [
+						...(parameter.values.find(it => it.district == 'Celá ČR')) ? [
 							[`parameter_${parameter.question.id}_region_facet`, ["Hlavní město Praha", "Středočeský kraj", "Jihočeský kraj", "Plzeňský kraj", "Karlovarský kraj", "Ústecký kraj", "Liberecký kraj", "Královéhradecký kraj", "Pardubický kraj", "Kraj Vysočina", "Jihomoravský kraj", "Olomoucký kraj", "Zlínský kraj", "Moravskoslezský kraj"]],
 							[`parameter_uk_${parameter.question.id}_region_facet`, parameter.values.map(it => it.district?.region.nameUK)],
 						] : [
