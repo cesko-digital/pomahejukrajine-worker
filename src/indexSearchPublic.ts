@@ -50,6 +50,8 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 						}) {
 							id
 							code
+							createdAt
+							updatedAt
 							parameters(filter: { question: { public: { eq:  true } } }){
 								question {
 									id
@@ -104,6 +106,8 @@ function offerToDocument(offer: any) {
 	return {
 		id: offer.id,
 		code: offer.code,
+		createdAt: Math.floor(new Date(offer.createdAt).getTime()/1000),
+		updatedAt: Math.floor(new Date(offer.updatedAt).getTime()/1000),
 		...Object.fromEntries(
 			offer.parameters
 				.flatMap((parameter: any) => [
