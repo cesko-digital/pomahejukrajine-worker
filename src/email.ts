@@ -14,6 +14,7 @@ type Payloads = {
 		offerTypeName: string
 		email: string
 		phone: string
+		text?: string
 	}
 }
 
@@ -126,9 +127,9 @@ const templates: Templates = {
 											nastavení hesla.</p>
 
 											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrl}">${payload.verificationUrl}</a></p>
-
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Tým Pomáhej Ukrajině</p>
 										</div>
 
 										<div style="margin-top: 50px;">
@@ -138,9 +139,9 @@ const templates: Templates = {
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">дякуємо за пропозицію допомоги. Будь ласка, підтвердьте свою електронну пошту, натиснувши посилання нижче а потім встановіть пароль.</p>
 
 											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrlUk}">${payload.verificationUrlUk}</a></p>
-
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Дякуємо!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Колектив Допомагай Україні</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Колектив Допомагай Україні</p>
 										</div>
 
 										</td>
@@ -257,9 +258,9 @@ const templates: Templates = {
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">pro předání kontaktu člověku, který nabízí pomoc, Vás prosíme o potvrzení vašeho emailu. Stačí kliknout na odkaz níže:</p>
 
 											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrl}">${payload.verificationUrl}</a></p>
-
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Tým Pomáhej Ukrajině</p>
 										</div>
 
 										<div style="margin-top: 50px;">
@@ -267,11 +268,11 @@ const templates: Templates = {
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Доброго дня,</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">для передачі контактних даних людині, яка пропонує допомогу, будь ласка підтвердьте ваш е-мейл. Просто натисніть посилання нижче:</p>
-
+											
 											<p><a style="color: #b61a3b;text-decoration: none;font-weight: bold;font-size: 1.25rem; line-height: 1.75rem;" href="${payload.verificationUrlUk}">${payload.verificationUrlUk}</a></p>
-
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Дякуємо!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Колектив Допомагай Україні</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Колектив Допомагай Україні</p>
 										</div>
 
 										</td>
@@ -308,7 +309,7 @@ const templates: Templates = {
 		text: `
 			Dobrý den,
 
-			máme poptávku po vámi nabízené pomoci v katgorii ${payload.offerTypeName}.
+			máme poptávku po vámi nabízené pomoci v kategorii ${payload.offerTypeName}.
 
 			Kontaktní údaje na člověka poptávajícího vaši pomoc:
 
@@ -316,7 +317,9 @@ const templates: Templates = {
 
 			${!payload.phone ? '' : `Telefon: ${payload.phone}`}
 
-			Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.
+			${!payload.text ? '' : `Zpráva: ${payload.text}`}
+
+			Upozornění: objevily se snahy získat podvodně finance od dobrovolníků, nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.
 
 			Děkujeme!
 			Tým Pomáhej Ukrajině
@@ -380,18 +383,19 @@ const templates: Templates = {
 											<h1 style="font-size: 3.75rem; line-height: 1; --tw-text-opacity: 1;color: rgb(17 24 39/var(--tw-text-opacity));">Pomáhej Ukrajině</h1>
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Dobrý den,</p>
 
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">máme poptávku po vámi nabízené pomoci v katgorii ${payload.offerTypeName}.</p>
-
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">máme poptávku po vámi nabízené pomoci v kategorii ${payload.offerTypeName}.</p>
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Kontaktní údaje na člověka poptávajícího vaši pomoc:</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">E-mail: ${payload.email}</p>
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Telefon: ${!payload.phone ? 'Nevyplněn' : `${payload.phone}`}</p>
-
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.</p>
-
+											${payload.text ? `<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Zpráva:<br />${payload.text.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>` : ''}
+											<br />
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Upozornění: objevily se snahy získat podvodně finance od dobrovolníků, nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.</p>
+											<br />
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Tým Pomáhej Ukrajině</p>
 										</div>
 
 										</td>
@@ -430,7 +434,10 @@ export const sendEmail = async <T extends keyof Payloads>(to: string, kind: T, p
 	console.log(`Sender: Sending ${kind} email to ${to}`)
 	const email = templates[kind](payload as any)
 	await transport.sendMail({
-		from: config.EMAIL_FROM,
+		from: {
+			name: "Pomáhej Ukrajině (automatický mail, neodpovídejte)",
+			address: config.EMAIL_FROM
+		},
 		to,
 		subject: email.subject,
 		text: email.text,
