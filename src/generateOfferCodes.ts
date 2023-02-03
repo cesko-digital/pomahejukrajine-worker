@@ -72,6 +72,8 @@ export const generateOfferCodes = async () => {
 		? (listJson as any)?.data?.listOffer
 		: undefined;
 
+	console.log(listJson)
+
 	for (const { id } of list) {
 		try {
 			console.log(`Generating code for offer ${id}`);
