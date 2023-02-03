@@ -57,7 +57,7 @@ export const generateOfferCodes = async () => {
 					{
 						listOffer(
 							filter: {
-								{ code: { isNull: true } }
+								code: { isNull: true }
 							},
 							limit: 10
 						) {
@@ -71,9 +71,6 @@ export const generateOfferCodes = async () => {
 	const list: undefined | { id: string }[] = listJson
 		? (listJson as any)?.data?.listOffer
 		: undefined;
-
-	console.log(listResponse)
-	console.log(listJson)
 
 	for (const { id } of list) {
 		try {
