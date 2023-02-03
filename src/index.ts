@@ -5,6 +5,7 @@ import { indexToTypesense } from "./indexSearch.js"
 import { indexToTypesensePublic } from "./indexSearchPublic.js"
 import { TYPESENSE_HOST, TYPESENSE_HOST_PUBLIC } from "./config.js"
 import { translateParameters } from './translateParameters.js'
+import { generateOfferCodes }  from './generateOfferCodes.js';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -39,6 +40,10 @@ async function main() {
 		if (i % 60 === 0) { // 25 seconds
 			console.log("Translating...")
 			await translateParameters('OfferParameterValue')
+		}
+		if (i % 60 === 0) { // 25 seconds
+			console.log("Generating offer codes...")
+			await generateOfferCodes()
 		}
 
 		i++
