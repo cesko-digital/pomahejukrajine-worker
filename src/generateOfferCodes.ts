@@ -72,6 +72,7 @@ export const generateOfferCodes = async () => {
 		? (listJson as any)?.data?.listOffer
 		: undefined;
 
+	console.log(listResponse)
 	console.log(listJson)
 
 	for (const { id } of list) {
