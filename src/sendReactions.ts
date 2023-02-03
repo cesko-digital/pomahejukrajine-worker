@@ -73,6 +73,7 @@ export const sendReactions = async () => {
 							id
 							email
 							phone
+							text
 							offer {
 								type { name }
 								volunteer { email }
