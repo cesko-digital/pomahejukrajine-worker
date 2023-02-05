@@ -1,43 +1,45 @@
-import nodemailer from 'nodemailer'
-import * as config from './config.js'
+import nodemailer from "nodemailer";
+import * as config from "./config.js";
 
 type Payloads = {
 	verification: {
-		verificationUrl: string
-		verificationUrlUk: string
-	}
+		verificationUrl: string;
+		verificationUrlUk: string;
+	};
 	reactionVerification: {
-		verificationUrl: string
-		verificationUrlUk: string
-	}
+		verificationUrl: string;
+		verificationUrlUk: string;
+	};
 	reaction: {
-		offerTypeName: string
-		email: string
-		phone: string
-	}
-}
+		offerTypeName: string;
+		email: string;
+		phone: string;
+		text: string;
+	};
+};
 
 export type Email = {
-	subject: string
-	text: string
-	html: string
-}
+	subject: string;
+	text: string;
+	html: string;
+};
 
 const transport = nodemailer.createTransport({
-
 	host: config.EMAIL_HOST,
 	port: config.EMAIL_PORT,
-	...(config.EMAIL_USER || config.EMAIL_PASSWORD ? {
-		auth: {
-			user: config.EMAIL_USER,
-			pass: config.EMAIL_PASSWORD
-		}
-	} : {}),
-})
+	...(config.EMAIL_USER || config.EMAIL_PASSWORD
+		? {
+				auth: {
+					user: config.EMAIL_USER,
+					pass: config.EMAIL_PASSWORD,
+				},
+		  }
+		: {}),
+});
 
 type Templates = {
-	[key in keyof Payloads]: (payload: Payloads[key]) => Email
-}
+	[key in keyof Payloads]: (payload: Payloads[key]) => Email;
+};
 
 const templates: Templates = {
 	verification: (payload) => ({
@@ -170,7 +172,7 @@ const templates: Templates = {
 			</body>
 
 			</html>
-		`
+		`,
 	}),
 	reactionVerification: (payload) => ({
 		subject: "Pomáhej Ukrajině - ověření emailu",
@@ -301,20 +303,20 @@ const templates: Templates = {
 			</body>
 
 			</html>
-		`
+		`,
 	}),
 	reaction: (payload) => ({
 		subject: "Pomáhej Ukrajině - poptávka po vámi nabízené pomoci",
 		text: `
 			Dobrý den,
 
-			máme poptávku po vámi nabízené pomoci v katgorii ${payload.offerTypeName}.
+			máme poptávku po vámi nabízené pomoci v kategorii ${payload.offerTypeName}.
 
 			Kontaktní údaje na člověka poptávajícího vaši pomoc:
 
 			${payload.email}
 
-			${!payload.phone ? '' : `Telefon: ${payload.phone}`}
+			${!payload.phone ? "" : `Telefon: ${payload.phone}`}
 
 			Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.
 
@@ -379,19 +381,35 @@ const templates: Templates = {
 										<div>
 											<h1 style="font-size: 3.75rem; line-height: 1; --tw-text-opacity: 1;color: rgb(17 24 39/var(--tw-text-opacity));">Pomáhej Ukrajině</h1>
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Dobrý den,</p>
-
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">máme poptávku po vámi nabízené pomoci v katgorii ${payload.offerTypeName}.</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">máme poptávku po vámi nabízené pomoci v kategorii ${
+												payload.offerTypeName
+											}.</p>
+											
+											<br />
 
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Kontaktní údaje na člověka poptávajícího vaši pomoc:</p>
-
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">E-mail: ${payload.email}</p>
-
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Telefon: ${!payload.phone ? 'Nevyplněn' : `${payload.phone}`}</p>
-
-											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Upozornění: objevily se snahy získat podvodně finance od dobrovolníků nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.</p>
-
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">E-mail: ${
+												payload.email
+											}</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Telefon: ${
+												!payload.phone
+													? "Nevyplněn"
+													: `${payload.phone}`
+											}</p>
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Zpráva nabízejícímu: ${
+												!payload.text
+													? "Nevyplněno"
+													: `${payload.text}`
+											}</p>
+											
+											<br />
+											
+											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity)); font-size: 1.25rem; line-height: 1.75rem;">Upozornění: objevily se snahy získat podvodně finance od dobrovolníků, nabízejících materiální pomoc. Na žádosti o finanční podporu prosím nereagujte.</p>
+											
+											<br />
+											
 											<p style="--tw-text-opacity: 1; color: rgb(107 114 128/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Děkujeme!</p>
-											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.rem; line-height: 1.5rem;">Tým Pomáhej Ukrajině</p>
+											<p style="--tw-text-opacity: 1; color: rgb(156 163 175/var(--tw-text-opacity));font-size: 1.25rem; line-height: 1.75rem;">Tým Pomáhej Ukrajině</p>
 										</div>
 
 										</td>
@@ -423,17 +441,20 @@ const templates: Templates = {
 			</html>
 		`,
 	}),
-}
+};
 
-
-export const sendEmail = async <T extends keyof Payloads>(to: string, kind: T, payload: Payloads[T]) => {
-	console.log(`Sender: Sending ${kind} email to ${to}`)
-	const email = templates[kind](payload as any)
+export const sendEmail = async <T extends keyof Payloads>(
+	to: string,
+	kind: T,
+	payload: Payloads[T]
+) => {
+	console.log(`Sender: Sending ${kind} email to ${to}`);
+	const email = templates[kind](payload as any);
 	await transport.sendMail({
 		from: config.EMAIL_FROM,
 		to,
 		subject: email.subject,
 		text: email.text,
 		html: email.html,
-	})
-}
+	});
+};
