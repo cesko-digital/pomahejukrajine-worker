@@ -52,6 +52,9 @@ async function indexOfferType(offerTypeId: string, collection: Collection) {
 							code
 							createdAt
 							updatedAt
+							volunteer {
+								organization
+							}
 							parameters(filter: { question: { public: { eq:  true } } }){
 								question {
 									id
@@ -106,6 +109,7 @@ function offerToDocument(offer: any) {
 	return {
 		id: offer.id,
 		code: offer.code,
+		organization: (offer.volunteer.organization != '') ? offer.volunteer.organization : null,
 		createdAt: Math.floor(new Date(offer.createdAt).getTime()/1000),
 		updatedAt: Math.floor(new Date(offer.updatedAt).getTime()/1000),
 		...Object.fromEntries(
