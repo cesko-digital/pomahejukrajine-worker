@@ -172,8 +172,8 @@ function offerToDocument(offer: Offer) {
 					}
 				})
 		),
-		status_name: offer.status?.name,
-		status_name_facet: offer.status?.name,
+		status_name: offer.status ? offer.status.name : "Bez stavu",
+		status_name_facet: offer.status ? offer.status.name : "Bez stavu",
 	}
 }
 
