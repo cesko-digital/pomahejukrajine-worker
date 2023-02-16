@@ -6,6 +6,7 @@ type Reaction = {
 	id: string
 	email: string
 	phone: string
+	text: string
 	offer: {
 		type: { name: string }
 		volunteer: { email: string }
@@ -16,6 +17,7 @@ const sendReaction = async (reaction: Reaction) => {
 	await sendEmail(reaction.offer.volunteer.email, "reaction", {
 		email: reaction.email,
 		phone: reaction.phone,
+		text: reaction.text,
 		offerTypeName: reaction.offer.type.name,
 	});
 	const response = await fetch(
