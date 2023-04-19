@@ -7,7 +7,7 @@ const verifyReaction = async (id: string, email: string) => {
 	const secretCode = generateSecretCode();
 	await sendEmail(email, "reactionVerification", {
 		verificationUrl: `${FRONTEND_URL}/verifyReaction?id=${id}&secretCode=${secretCode}`,
-		verificationUrlUk: `${FRONTEND_URL}/uk/verifyReaction?id=${id}&secretCode=${secretCode}`,
+		verificationUrlUk: `${FRONTEND_URL}/ua/verifyReaction?id=${id}&secretCode=${secretCode}`,
 	});
 	const response = await fetch(
 		CONTEMBER_CONTENT_URL,
