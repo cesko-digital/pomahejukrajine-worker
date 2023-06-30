@@ -24,18 +24,6 @@ export type Email = {
 	html: string
 }
 
-const transport = nodemailer.createTransport({
-
-	host: config.EMAIL_HOST,
-	port: config.EMAIL_PORT,
-	...(config.EMAIL_USER || config.EMAIL_PASSWORD ? {
-		auth: {
-			user: config.EMAIL_USER,
-			pass: config.EMAIL_PASSWORD
-		}
-	} : {}),
-})
-
 type Templates = {
 	[key in keyof Payloads]: (payload: Payloads[key]) => Email
 }
@@ -430,18 +418,41 @@ const templates: Templates = {
 	}),
 }
 
-
 export const sendEmail = async <T extends keyof Payloads>(to: string, kind: T, payload: Payloads[T]) => {
-	console.log(`Sender: Sending ${kind} email to ${to}`)
-	const email = templates[kind](payload as any)
-	await transport.sendMail({
-		from: {
-			name: "Pomáhej Ukrajině (automatický mail, neodpovídejte)",
-			address: config.EMAIL_FROM
-		},
-		to,
-		subject: email.subject,
-		text: email.text,
-		html: email.html,
-	})
+	console.log(`Sender: Sending ${kind} email to ${to}`);
+	const email = templates[kind](payload as any);
+	const response = await fetch('https://api2.ecomailapp.cz/transactional/send-message', {
+			method: 'POST',
+			headers: {
+					'Content-Type': 'application/json',
+					'key': config.API_KEY,
+			},
+			body: JSON.stringify({
+					"message": {
+							"subject": email.subject,
+							"from_name": "Pomáhej Ukrajině (automatický mail, neodpovídejte)",
+							"from_email": config.EMAIL_FROM,
+							"text": email.text,
+							"html": email.html,
+							"to": [
+									{
+											"email": to,
+									}
+							],
+							"options": {
+									"click_tracking": false,
+									"open_tracking": false
+							}
+					}
+			})
+	});
+
+	if (response.ok) {
+			const responseBody = await response.json();
+			console.log('Status:', response.status);
+			console.log('Headers:', JSON.stringify(response.headers));
+			console.log('Response:', responseBody);
+	} else {
+			console.error(`HTTP error! status: ${response.status}`);
+	}
 }
