@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer'
+import fetch from "node-fetch"
 import * as config from './config.js'
 
 type Payloads = {
