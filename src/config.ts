@@ -6,6 +6,7 @@ export const EMAIL_PORT = parseInt(process.env.EMAIL_PORT, 10)
 export const EMAIL_USER = process.env.EMAIL_USER
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD
 export const EMAIL_FROM = process.env.EMAIL_FROM
+export const EMAIL_BCC = process.env.EMAIL_BCC
 export const FRONTEND_URL = process.env.FRONTEND_URL
 export const TYPESENSE_HOST = process.env.TYPESENSE_HOST
 export const TYPESENSE_PORT = parseInt(process.env.TYPESENSE_PORT, 10)

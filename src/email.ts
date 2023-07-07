@@ -437,6 +437,7 @@ export const sendEmail = async <T extends keyof Payloads>(to: string, kind: T, p
 							"to": [
 									{
 											"email": to,
+											"bcc": config.EMAIL_BCC
 									}
 							],
 							"options": {
